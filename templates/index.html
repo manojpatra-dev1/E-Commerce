@@ -1,0 +1,307 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Home Page
+{% endblock %}
+
+{% block main %}
+
+<style>
+
+/* GLOBAL */
+body{
+    background:#f5f7fb;
+    font-family:'Inter',sans-serif;
+}
+
+/* ================= CATEGORY ================= */
+
+.category-wrapper{
+    background:white;
+    border-radius:20px;
+    padding:15px;
+    margin-bottom:25px;
+    box-shadow:0 4px 15px rgba(0,0,0,0.05);
+}
+
+/*  SCROLL ENABLED + VISIBLE */
+.category-scroll{
+    display:flex;
+    gap:10px;
+    overflow-x:auto;
+    padding-bottom:8px; /* space for scrollbar */
+}
+
+/*  SCROLLBAR DESIGN */
+.category-scroll::-webkit-scrollbar{
+    height:6px;
+}
+
+.category-scroll::-webkit-scrollbar-track{
+    background:#e5e7eb;
+    border-radius:10px;
+}
+
+.category-scroll::-webkit-scrollbar-thumb{
+    background:#111827;
+    border-radius:10px;
+}
+
+.category-scroll::-webkit-scrollbar-thumb:hover{
+    background:#374151;
+}
+
+/* FIREFOX */
+.category-scroll{
+    scrollbar-color:#111827 #e5e7eb;
+    scrollbar-width:thin;
+}
+
+.category-btn{
+    flex:0 0 auto;
+    text-decoration:none;
+    background:#f3f4f6;
+    color:#111827;
+    padding:10px 18px;
+    border-radius:12px;
+    font-size:14px;
+    font-weight:700;
+    white-space:nowrap;
+    transition:0.3s;
+}
+
+.category-btn:hover{
+    background:#111827;
+    color:white;
+}
+
+.active-category{
+    background:#111827;
+    color:white;
+}
+
+/* ================= PRODUCT ================= */
+
+.product-card{
+    background:white;
+    border-radius:20px;
+    overflow:hidden;
+    transition:0.3s;
+    height:100%;
+    box-shadow:0 4px 15px rgba(0,0,0,0.05);
+}
+
+.product-card:hover{
+    transform:translateY(-6px);
+}
+
+/* DISCOUNT */
+.discount-badge{
+    position:absolute;
+    top:12px;
+    left:12px;
+    background:#ef4444;
+    color:white;
+    padding:6px 12px;
+    border-radius:8px;
+    font-size:12px;
+    font-weight:700;
+}
+
+/* IMAGE */
+.product-image-box{
+    height:220px;
+    background:#f9fafb;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+}
+
+.product-image{
+    max-width:100%;
+    max-height:100%;
+    object-fit:contain;
+}
+
+/* BODY */
+.product-body{
+    padding:18px;
+}
+
+.product-name{
+    font-size:18px;
+    font-weight:700;
+    margin-bottom:10px;
+}
+
+/* RATING */
+.rating-box{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:12px;
+}
+
+.star{
+    background:#16a34a;
+    color:white;
+    padding:4px 10px;
+    border-radius:6px;
+    font-size:12px;
+}
+
+/* PRICE */
+.price-section{
+    display:flex;
+    gap:8px;
+    align-items:center;
+    margin-bottom:8px;
+}
+
+.new-price{
+    font-size:22px;
+    font-weight:800;
+}
+
+.old-price{
+    font-size:14px;
+    text-decoration:line-through;
+    color:#9ca3af;
+}
+
+/* SAVE */
+.save-text{
+    color:#16a34a;
+    font-size:13px;
+    margin-bottom:15px;
+}
+
+/* BUTTON */
+.cart-btn{
+    display:block;
+    width:100%;
+    padding:12px;
+    border-radius:12px;
+    background:#111827;
+    color:white;
+    text-align:center;
+    text-decoration:none;
+    font-weight:700;
+}
+
+.cart-btn:hover{
+    background:black;
+}
+
+/* EMPTY */
+.empty-box{
+    background:white;
+    padding:60px;
+    text-align:center;
+    border-radius:20px;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media(max-width:768px){
+
+    .product-image-box{
+        height:180px;
+    }
+
+    .new-price{
+        font-size:18px;
+    }
+
+}
+
+</style>
+
+<!--  FIXED CONTAINER -->
+<div class="container-fluid px-3 px-lg-4 py-4">
+
+    <!-- CATEGORY -->
+    <div class="category-wrapper">
+
+        <div class="category-scroll">
+
+            <a href="/"
+               class="category-btn {% if not request.GET.category %}active-category{% endif %}">
+               For You 🛒
+            </a>
+
+            {% for category in categories %}
+
+            <a href="/?category={{ category.id }}"
+               class="category-btn {% if request.GET.category == category.id|stringformat:'s' %}active-category{% endif %}">
+               {{ category.name }}
+            </a>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+    <!-- PRODUCTS -->
+    <div class="row">
+
+        {% for product in products %}
+
+        <div class="col-xl-3 col-lg-4 col-md-6 col-12 mb-4">
+
+            <div class="product-card position-relative">
+
+                <div class="discount-badge">
+                    {{ product.discount_percentage }}% OFF
+                </div>
+
+                <div class="product-image-box">
+                    <img src="{{ product.image.url }}" class="product-image">
+                </div>
+
+                <div class="product-body">
+
+                    <div class="product-name">
+                        {{ product.name }}
+                    </div>
+
+                    <div class="rating-box">
+                        <span class="star">★ {{ product.rating }}</span>
+                        <span>{{ product.rating_count }} Ratings</span>
+                    </div>
+
+                    <div class="price-section">
+                        <div class="new-price">₹ {{ product.price }}</div>
+                        <div class="old-price">₹ {{ product.old_price }}</div>
+                    </div>
+
+                    <div class="save-text">
+                        You Save ₹ {{ product.saving_amount }}
+                    </div>
+
+                    <a href="{% url 'add_to_cart' product.id %}" class="cart-btn">
+                        Add To Cart
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% empty %}
+
+        <div class="col-12">
+            <div class="empty-box">
+                <h3>No Products Available</h3>
+            </div>
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}
