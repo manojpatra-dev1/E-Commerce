@@ -1,0 +1,563 @@
+{% extends 'base.html' %}
+{% load cart %}
+
+{% block title %}
+Cart
+{% endblock %}
+
+{% block main %}
+
+<style>
+
+body{
+    background:#f5f7fb;
+}
+
+/* ================= PAGE TITLE ================= */
+
+.cart-heading{
+    font-size:32px;
+    font-weight:800;
+    color:#111827;
+    margin-bottom:25px;
+}
+
+/* ================= CART CARD ================= */
+
+.cart-card{
+    background:white;
+    border-radius:24px;
+    padding:25px;
+    margin-bottom:22px;
+    box-shadow:0 8px 30px rgba(0,0,0,0.05);
+    transition:0.3s;
+}
+
+.cart-card:hover{
+    transform:translateY(-4px);
+}
+
+/* ================= IMAGE ================= */
+
+.product-image-box{
+    width:140px;
+    height:140px;
+    background:#f9fafb;
+    border-radius:18px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin:auto;
+}
+
+.product-image{
+    max-width:100%;
+    max-height:100%;
+    object-fit:contain;
+}
+
+/* ================= PRODUCT DETAILS ================= */
+
+.product-name{
+    font-size:24px;
+    font-weight:700;
+    color:#111827;
+    margin-bottom:10px;
+}
+
+.product-sub{
+    font-size:15px;
+    color:#6b7280;
+    margin-bottom:14px;
+}
+
+/* ================= RATING ================= */
+
+.rating-row{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-bottom:16px;
+}
+
+.rating-badge{
+    background:#16a34a;
+    color:white;
+    padding:5px 12px;
+    border-radius:8px;
+    font-size:14px;
+    font-weight:700;
+}
+
+.rating-text{
+    color:#6b7280;
+    font-size:14px;
+    font-weight:600;
+}
+
+/* ================= PRICE ================= */
+
+.price-row{
+    display:flex;
+    align-items:center;
+    gap:15px;
+    flex-wrap:wrap;
+}
+
+.new-price{
+    font-size:32px;
+    font-weight:800;
+    color:#111827;
+}
+
+.old-price{
+    font-size:18px;
+    text-decoration:line-through;
+    color:#9ca3af;
+}
+
+.discount-text{
+    color:#16a34a;
+    font-size:16px;
+    font-weight:700;
+}
+
+/* ================= STOCK ================= */
+
+.stock-text{
+    margin-top:12px;
+    color:#e11d48;
+    font-size:15px;
+    font-weight:600;
+}
+
+/* ================= QUANTITY ================= */
+
+.qty-wrapper{
+    margin-top:22px;
+    display:flex;
+    align-items:center;
+    gap:15px;
+}
+
+.qty-btn{
+    width:42px;
+    height:42px;
+    border-radius:50%;
+    background:#f3f4f6;
+    border:none;
+    text-decoration:none;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#111827;
+    font-size:22px;
+    font-weight:700;
+    transition:0.3s;
+}
+
+.qty-btn:hover{
+    background:#111827;
+    color:white;
+}
+
+.qty-number{
+    font-size:18px;
+    font-weight:700;
+    color:#111827;
+}
+
+/* ================= ACTION BUTTONS ================= */
+
+.action-row{
+    margin-top:24px;
+    padding-top:20px;
+    border-top:1px solid #e5e7eb;
+    display:flex;
+    gap:20px;
+    flex-wrap:wrap;
+}
+
+.action-btn{
+    text-decoration:none;
+    font-size:15px;
+    font-weight:700;
+    color:#374151;
+    transition:0.3s;
+}
+
+.action-btn:hover{
+    color:#2563eb;
+}
+
+/* ================= SUMMARY ================= */
+
+.summary-card{
+    background:white;
+    border-radius:24px;
+    padding:28px;
+    box-shadow:0 8px 30px rgba(0,0,0,0.05);
+    position:sticky;
+    top:110px;
+}
+
+.summary-title{
+    font-size:22px;
+    font-weight:800;
+    margin-bottom:25px;
+    color:#111827;
+}
+
+.summary-row{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:18px;
+    color:#374151;
+    font-size:16px;
+}
+
+.green{
+    color:#16a34a;
+    font-weight:700;
+}
+
+.total-row{
+    border-top:1px dashed #d1d5db;
+    border-bottom:1px dashed #d1d5db;
+    padding:20px 0;
+    margin:25px 0;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.total-label{
+    font-size:20px;
+    font-weight:700;
+}
+
+.total-price{
+    font-size:30px;
+    font-weight:800;
+    color:#111827;
+}
+
+/* ================= SAVE BOX ================= */
+
+.save-box{
+    background:#ecfdf5;
+    color:#16a34a;
+    padding:15px;
+    border-radius:14px;
+    text-align:center;
+    font-weight:700;
+    margin-bottom:22px;
+}
+
+/* ================= BUTTON ================= */
+
+.place-btn{
+    width:100%;
+    border:none;
+    background:#111827;
+    color:white;
+    padding:16px;
+    border-radius:16px;
+    font-size:17px;
+    font-weight:700;
+    transition:0.3s;
+}
+
+.place-btn:hover{
+    background:black;
+    transform:translateY(-2px);
+}
+
+/* ================= EMPTY ================= */
+
+.empty-box{
+    background:white;
+    border-radius:24px;
+    padding:70px 20px;
+    text-align:center;
+    box-shadow:0 8px 30px rgba(0,0,0,0.05);
+}
+
+.empty-box h3{
+    font-size:32px;
+    font-weight:800;
+    color:#111827;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media(max-width:768px){
+
+    .product-name{
+        font-size:20px;
+        margin-top:20px;
+    }
+
+    .new-price{
+        font-size:28px;
+    }
+
+    .summary-card{
+        margin-top:25px;
+        position:static;
+    }
+
+    .cart-heading{
+        font-size:28px;
+    }
+
+}
+
+</style>
+
+<div class="container py-5">
+
+    <h1 class="cart-heading">
+
+        Shopping Cart
+
+    </h1>
+
+    <div class="row">
+
+        <!-- LEFT SIDE -->
+
+        <div class="col-lg-8">
+
+            {% for product in products %}
+
+            <div class="cart-card">
+
+                <div class="row align-items-center">
+
+                    <!-- IMAGE -->
+
+                    <div class="col-md-3 text-center">
+
+                        <div class="product-image-box">
+
+                            <img src="{{ product.image.url }}"
+                                 class="product-image">
+
+                        </div>
+
+                    </div>
+
+                    <!-- DETAILS -->
+
+                    <div class="col-md-9">
+
+                        <h2 class="product-name">
+
+                            {{ product.name }}
+
+                        </h2>
+
+                        <div class="product-sub">
+
+                            Premium Quality Product
+
+                        </div>
+
+                        <!-- RATING -->
+
+                        <div class="rating-row">
+
+                            <div class="rating-badge">
+
+                                ★ 4.5
+
+                            </div>
+
+                            <div class="rating-text">
+
+                                1,245 Ratings
+
+                            </div>
+
+                        </div>
+
+                        <!-- PRICE -->
+
+                        <div class="price-row">
+
+                            <div class="new-price">
+
+                                ₹ {{ product.price }}
+
+                            </div>
+
+                            <div class="old-price">
+
+                                ₹ {{ product.price|add:1000 }}
+
+                            </div>
+
+                            <div class="discount-text">
+
+                                45% OFF
+
+                            </div>
+
+                        </div>
+
+                        <div class="stock-text">
+
+                            Only few items left
+
+                        </div>
+
+                        <!-- QUANTITY -->
+
+                        <div class="qty-wrapper">
+
+                            <a href="{% url 'remove_from_cart' product.id %}"
+                               class="qty-btn">
+
+                                -
+
+                            </a>
+
+                            <div class="qty-number">
+
+                                {{ request.session.cart|get_item:product.id }}
+
+                            </div>
+
+                            <a href="{% url 'add_to_cart' product.id %}"
+                               class="qty-btn"
+                               onclick="return checkLimit({{ request.session.cart|get_item:product.id }})">
+
+                                +
+
+                            </a>
+
+                        </div>
+
+                        <!-- ACTION -->
+
+                        <div class="action-row">
+
+                            <a href="{% url 'remove_from_cart' product.id %}"
+                               class="action-btn">
+
+                                🗑 Remove
+
+                            </a>
+
+                            <a href="{% url 'checkout' %}"
+                               class="action-btn">
+
+                                ⚡ Buy Now
+
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            {% empty %}
+
+            <div class="empty-box">
+
+                <h3>
+
+                    Your Cart is Empty 🛒
+
+                </h3>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+        <!-- RIGHT SIDE -->
+
+        {% if products %}
+
+        <div class="col-lg-4">
+
+            <div class="summary-card">
+
+                <h3 class="summary-title">
+
+                    Price Details
+
+                </h3>
+
+              
+
+               
+
+               
+
+                <!-- TOTAL -->
+
+                <div class="total-row">
+
+                    <div class="total-label">
+
+                        Total
+
+                    </div>
+
+                    <div class="total-price">
+
+                        ₹ {{ products|cart_total:request.session.cart }}
+
+                    </div>
+
+                </div>
+
+
+                <!-- BUTTON -->
+
+                <a href="{% url 'checkout' %}">
+
+                    <button class="place-btn">
+
+                        Proceed To Checkout
+
+                    </button>
+
+                </a>
+
+            </div>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+<script>
+
+let maxItems = 5;
+
+function checkLimit(currentQty){
+
+    if(currentQty >= maxItems){
+
+        alert("Maximum 5 items allowed");
+
+        return false;
+    }
+
+    return true;
+}
+
+</script>
+
+{% endblock %}

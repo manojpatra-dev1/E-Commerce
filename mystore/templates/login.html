@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<style>
+
+    .border{
+        background: rgba(255,255,255,0.8);
+        backdrop-filter: blur(12px);
+        border:none;
+        border-radius:20px;
+        box-shadow:0 10px 30px rgba(0,0,0,0.08);
+    }
+
+    .btn{
+        background: linear-gradient(135deg,#2563eb,#1d4ed8);
+        color:white;
+    }
+    input{
+        border-radius:10px !important;
+    }
+
+</style>
+<div class="container">
+    <div class="row m-4">
+        <div class="col-lg-6 mx-auto">
+            <div class="border shadow p-3">
+                <h1 class="m-3  pb-3 border-bottom">Login Page</h1>
+
+                <!-- display error message if email or password incorrect -->
+                {% if error %}
+                <div class="alert alert-danger alert-dismissible fade show m-3" role="alert">
+                    <strong>{{ error }}</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                {% endif %}
+
+                <form method="POST" action="/login/" class="border  m-3 p-4">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label>Email ID:</label>
+                        <input type="email" name="email" class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Password:</label>
+                        <input type="password" name="password" class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <input type="submit" value="Login" class="btn btn-outline-dark mt-3 form-control">
+                        <div class="text-center mt-3">
+
+                            <a href="{% url 'password_reset' %}">
+                                Forgot Password?
+                            </a>
+
+                        </div>
+
+                        <div class="text-center mt-2">
+
+                            Don't have an account?
+
+                            <a href="{% url 'signup_page' %}">
+                                Register Now
+                            </a>
+
+                        </div>
+                    </div>
+                </form>
+
+            </div> <!-- border div close -->
+        </div> <!-- col-lg-6  div close -->
+    </div> <!-- row div close -->
+</div> <!-- container div close -->
+{% endblock %}
