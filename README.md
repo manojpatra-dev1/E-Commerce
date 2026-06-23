@@ -30,8 +30,8 @@ E-Commerce/
 ├── static/            # CSS, JS, images
 ├── manage.py
 ├── requirements.txt
-├── Procfile
-└── vercel.json
+
+
 ```
 
 1.Installation
